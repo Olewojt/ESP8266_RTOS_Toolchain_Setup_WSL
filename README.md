@@ -1,5 +1,5 @@
-# ESP8266 RTOS SDK Toolchain for Windows WSL 1
-Toolchain for development of RTOS applications for ESP8266 using [WSL 1 (Windows Subsystem for Linux)](https://learn.microsoft.com/en-us/windows/wsl/about) and programming using USB-UART converter. Using WSL makes it portable across multiple Windows devices. This setup is based on [Espressif's Get-Started guide](https://docs.espressif.com/projects/esp8266-rtos-sdk/en/latest/get-started/index.html) along with fixes to problems that occured due to absence of updates.
+# ESP8266 RTOS SDK Toolchain Setup
+Toolchain for development of RTOS applications for ESP8266 using [WSL 1 (Windows Subsystem for Linux)](https://learn.microsoft.com/en-us/windows/wsl/about) and programming using USB-UART converter. Using WSL makes it portable across multiple Windows devices.
 
 ## Why WSL 1?
 - WSL 1 directly maps connected COM**X** devices to /dev/ttyS**X** files
@@ -55,66 +55,34 @@ sudo apt-get update
 sudo apt-get upgrade
 ```
 
-### 2.2 Install tools
+### 2.2 Download packages and SDK
 Slightly modified prompt from [here](https://docs.espressif.com/projects/esp8266-rtos-sdk/en/latest/get-started/linux-setup.html#install-prerequisites).
 ```
-sudo apt-get install gcc git wget make libncurses-dev flex bison gperf python3 python3-pip
+sudo apt-get install gcc git wget make libncurses-dev flex bison gperf python3 python3-pip virtualenv python-is-python3
 ```
-### 2.3 Download ESP8266 Toolchain
-Get appropiate link [here](https://docs.espressif.com/projects/esp8266-rtos-sdk/en/latest/get-started/linux-setup.html#toolchain-setup) and download it.
-```
-wget https://dl.espressif.com/dl/xtensa-lx106-elf-gcc8_4_0-esp-2020r3-linux-amd64.tar.gz
-```
-Export it using command below. Files should be exported to `/xtensa-lx106-elf` directory.
-```
-tar -xzf ~/Downloads/xtensa-lx106-elf-linux64-1.22.0-100-ge567ec7-5.2.0.tar.gz
-```
-Clone Espressif's [ESP8266 RTOS SDK](https://github.com/espressif/ESP8266_RTOS_SDK).
+Now you can download [ESP8266 RTOS SDK](https://github.com/espressif/ESP8266_RTOS_SDK).
 ```
 git clone --recursive https://github.com/espressif/ESP8266_RTOS_SDK.git
+cd ESP8266_RTOS_SDK
 ```
-Make virtual environment for Python.
+### 2.3 Execute installation script
 ```
-python3 -m venv .venv
+sudo ./install.sh
 ```
+And then export environmental variables using `export.sh` script. It has to be sourced.
+```
+source export.sh
+```
+### 2.4 Modify .bashrc
+Modify `.bashrc` file to execute export script everytime you login into WSL.
+```
+sudo nano ~/.bashrc
+```
+Add following lines to the end of the file. IDF_PATH is a path to previously cloned repository on your machine. 
+```
+export IDF_PATH="$HOME/ESP8266_RTOS_SDK"
+source $IDF_PATH/export.sh > /dev/null
+```
+Source command output is redirected to `/dev/null` as `export.sh` would print some information everytime you login to the system.
 
-### 2.4 Modify .bashrc file for environmental variables
-Go to home directory and edit .bashrc file using text editor of choice.
-```
-cd ~
-sudo nano .bashrc
-```
-`wslpath` is a utility tool that converts Windows path to Linux path. Last line runs python environment on login.
-```
-export PATH="$PATH:$(wslpath 'C:\Users\ketow\Documents\WSL_Distros\Debian_ESP8266\xtensa-lx106-elf\bin')"
-export IDF_PATH="$(wslpath 'C:\Users\ketow\Documents\WSL_Distros\Debian_ESP8266\ESP8266_RTOS_SDK')"
-source $(wslpath 'C:\Users\ketow\Documents\WSL_Distros\Debian_ESP8266\.venv\bin\activate')
-```
-Reload .bashrc file.
-```
-source .bashrc
-```
-You should be in virtual environment
-`(.venv) root@Vojtek:/mnt/c/Users/ketow#`, if not, login to WSL again.
-### 2.5 Install Python packages
-```
-python3 -m pip install -r $IDF_PATH/requirements.txt
-```
-You are all set!
-
-## 3. Usage
-Create a folder where you want to store your project and open WSL. I'am going to use `C:\Users\ketow\Documents\Projects_ESP\test_project`.
-```
-wsl -d Debian_ESP8266
-```
-Copy hello_world example from IDF directory.
-```
-cp -r $IDF_PATH/examples/get-started/hello_world .
-```
-**(Optional)** Create a symlink in home directory for your projects for easier access and simpler path.
-```
-cd ~
-ln -s $(wslpath 'C:\Users\ketow\Documents\Projects_ESP\test_project') rtos_test_project
-```
-
-Now you can follow along the rest of [Get Started guide](https://docs.espressif.com/projects/esp8266-rtos-sdk/en/latest/get-started/index.html#connect).
+## All done!
