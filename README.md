@@ -18,11 +18,11 @@ For example `Documents/WSL_Distros/`
 You can use this folder or create another one to manage multiple toolchain WSL's.
 
 ### 1.2 Open CMD in newly created folder
-**Tip** You can open command line in given folder by typing *cmd* in file explorer url tab:
+**_You can open command line in given folder by typing *cmd* in file explorer url tab._**
 ![CMD tip](assets/cmd_tip.png)
 
 ### 1.3 Install Debian WSL image
-It can be achieved by using command below or by installing it using [Windows Store](https://apps.microsoft.com/detail/9msvkqc78pk6)
+It can be achieved by using command below or by installing it using [Windows Store](https://apps.microsoft.com/detail/9msvkqc78pk6).
 ```
 wsl --install -d Debian
 ```
@@ -37,13 +37,13 @@ Import previously exported image here to machine named Debian_ESP8266 using WSL 
 ```
 wsl --import Debian_ESP8266 . debianExport --version 1
 ```
-**(Optional)** You can delete debianExport file
+**(Optional)** You can delete debianExport file.
 ```
 del debianExport
 ```
 
 ## 2. Debian setup
-This is essentially doing everything listed in [Get Started guide](https://docs.espressif.com/projects/esp8266-rtos-sdk/en/latest/get-started/index.html) and [Standard Setup of Toolchain](https://docs.espressif.com/projects/esp8266-rtos-sdk/en/latest/get-started/linux-setup.html#install-prerequisites) with slight fixes.
+Espressif provides [Get Started guide](https://docs.espressif.com/projects/esp8266-rtos-sdk/en/latest/get-started/index.html) where every configuration step is done manually, but there are installation scripts inside of [ESP8266 RTOS SDK](https://github.com/espressif/ESP8266_RTOS_SDK.git) repository which are going to be used in this guide.
 ### 2.1 Login to WSL and get repository updates
 Open WSL in current folder.
 ```
@@ -73,6 +73,7 @@ And then export environmental variables using `export.sh` script. It has to be s
 ```
 source export.sh
 ```
+**_They will persist until you close current login session._**
 ### 2.4 Modify .bashrc
 Modify `.bashrc` file to execute export script everytime you login into WSL.
 ```
